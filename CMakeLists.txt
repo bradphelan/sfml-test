@@ -19,7 +19,7 @@ FetchContent_MakeAvailable(clipper2)
 
 add_executable(CMakeSFMLProject src/main.cpp)
 target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics Clipper2)
-target_compile_features(CMakeSFMLProject PRIVATE cxx_std_17)
+target_compile_features(CMakeSFMLProject PRIVATE cxx_std_20)
 
 if(WIN32)
     add_custom_command(

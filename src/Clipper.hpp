@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <clipper2/clipper.h>
+#include <ranges>
 
 const double M_PI = 3.14159265358979323846;  /* pi */
 using polyline = std::vector<sf::Vector2f>;
@@ -57,78 +58,47 @@ polyline make_box(double boxWidth, sf::Vector2f center)
     return box;
 }
 
+// A to_vector combinator for std::ranges::views::transform so I can 
+// use at the end of a range pipeline to convert the range or view of T to a vector of T.
+
+
 inline
-auto paths_to_vertex_array(const Clipper2Lib::PathsD& paths)
+std::vector<sf::Vector2f> path_to_vector_array(const Clipper2Lib::PathD& path)
 {
-  auto result = std::vector<sf::Vertex>{};
-  for (const auto& path : paths)
-  {
-    for (const auto& point : path)
+    auto result = std::vector<sf::Vector2f>{};
+    result.reserve(path.size());
+    for (const auto &point : path)
+        result.push_back(sf::Vector2f(point.x, point.y));
+    return result;
+}
+
+// implements paths_to_vector_array
+inline  std::vector<std::vector<sf::Vector2f>> paths_to_vecvec(const Clipper2Lib::PathsD& paths)
+{
+    auto result = std::vector<std::vector<sf::Vector2f>>{};
+    result.reserve(paths.size());
+    for (const auto &path : paths)
+        result.push_back(path_to_vector_array(path));
+    return result;
+}
+
+inline Clipper2Lib::PathD vector_array_to_path(std::vector<sf::Vector2f> const& polyline)
+{
+    Clipper2Lib::PathsD result;
+    auto path = Clipper2Lib::PathD{};
+    path.reserve(polyline.size());
+    for (auto const& point : polyline)
     {
-      result.push_back(sf::Vertex(sf::Vector2f(point.x, point.y)));
+        path.push_back(Clipper2Lib::PointD{point.x, point.y});
     }
-  }
-  // Close the path
-    result.push_back(sf::Vertex(sf::Vector2f(paths[0][0].x, paths[0][0].y)));
-  return result;
+    return path;
 }
 
-inline
-/**
- * Draws a polyline on the specified SFML window.
- *
- * @param window The SFML window to draw on.
- * @param polyline The vector of 2D points representing the polyline.
- */
-void draw_polyline(sf::RenderWindow& window, const std::vector<sf::Vector2f>& polyline)
+// Clip a vector array with a vector array
+inline std::vector<std::vector<sf::Vector2f>> clip(std::vector<sf::Vector2f> const &subject, std::vector<sf::Vector2f> const &clip, Clipper2Lib::ClipType clipType)
 {
-  auto polyline_shape = sf::VertexArray(sf::LineStrip, polyline.size());
-  for (int i = 0; i < polyline.size(); i++)
-  {
-    polyline_shape[i] = sf::Vertex(polyline[i]);
-  }
-  window.draw(polyline_shape);
+    auto subject_path = vector_array_to_path(subject);
+    auto clip_path = vector_array_to_path(clip);
+    auto result = Clipper2Lib::BooleanOp(Clipper2Lib::ClipType::Intersection, Clipper2Lib::FillRule::NonZero, {subject_path}, {clip_path});
+    return paths_to_vecvec(std::move(result));
 }
-
-
-
-/**
- * Zooms the view at the specified pixel in the given window.
- *
- * @param pixel   The pixel coordinates to zoom at.
- * @param window  The SFML RenderWindow object.
- * @param zoom    The zoom factor.
- */
-void zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom)
-{
-	const sf::Vector2f beforeCoord{ window.mapPixelToCoords(pixel) };
-	sf::View view{ window.getView() };
-	view.zoom(zoom);
-	window.setView(view);
-	const sf::Vector2f afterCoord{ window.mapPixelToCoords(pixel) };
-	const sf::Vector2f offsetCoords{ beforeCoord - afterCoord };
-	view.move(offsetCoords);
-	window.setView(view);
-}
-
-/**
- * Zooms the view of the window on scroll event.
- *
- * This function adjusts the view of the specified window based on the scroll event
- * and the specified zoom factor. Just pass in the current window event and 
- * it will be detected if the scroll wheel was used and zoom the view accordingly.
- *
- * @param event   The current window event
- * @param window  The SFML RenderWindow object.
- * @param zoom    The zoom factor to apply to the view.
- */
-void zoomViewOnScroll(sf::Event event, sf::RenderWindow& window, float zoom)
-{
-    if (event.type != sf::Event::MouseWheelScrolled)
-        return;
-    if (event.mouseWheelScroll.delta > 0)
-        zoomViewAt({ event.mouseWheelScroll.x, event.mouseWheelScroll.y }, window, (1.f / zoom));
-    else if (event.mouseWheelScroll.delta < 0)
-        zoomViewAt({ event.mouseWheelScroll.x, event.mouseWheelScroll.y }, window, zoom);
-}
-
