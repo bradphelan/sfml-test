@@ -90,3 +90,62 @@ void draw_polyline(sf::RenderWindow& window, const std::vector<sf::Vector2f>& po
 
   window.draw(to_closed_line_strip(polyline, color));
 }
+
+/**
+ * @brief Draws a line on the specified SFML window.
+ *
+ * @param window The SFML window to draw on.
+ * @param a The starting point of the line.
+ * @param b The ending point of the line.
+ * @param color The color of the line (default: sf::Color::White).
+ */
+inline void draw_line(sf::RenderTarget& target, sf::Vector2f const& a, sf::Vector2f const& b, sf::Color color = sf::Color::White)
+{
+    target.draw(to_closed_line_strip({a,b}, color));
+}
+
+/// Vector dot product
+template <typename T>
+inline
+T dot(sf::Vector2<T> const & a, sf::Vector2<T> const & b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+/// Distance of point p to line segment (a,b)
+template<typename T>
+sf::Vector2<T> closest_point_to_line(sf::Vector2<T> const & a, sf::Vector2<T> const & b, sf::Vector2<T> const & p)
+{
+    sf::Vector2<T> const  ab = b - a;
+    sf::Vector2<T> const ap = p - a;
+    double const abap = dot(ab, ap);
+    double const  abab = dot(ab, ab);
+    double t = abap / abab;
+    if (t < 0.0f) t = 0.0f;
+    if (t > 1.0f) t = 1.0f;
+    if constexpr (std::is_integral_v<T>)
+        return a + sf::Vector2<T>((T)std::round(t * ab.x), (T)std::round(t * ab.y));
+    else
+        return a + sf::Vector2<T>(t * ab.x, t * ab.y);
+}
+
+/// Distance of point p to line segment (a,b)
+/// Returns integer value if the template parameter is an integer type
+template<typename T>
+T distance2_to_line(sf::Vector2<T> const & a, sf::Vector2<T> const & b, sf::Vector2<T> const & p)
+{
+    sf::Vector2<T> const closest = closest_point_to_line(a, b, p);
+    sf::Vector2<T> const delta = p - closest;
+    return dot(delta, delta);
+}
+
+int distance2_mouse_to_line_in_pixels(sf::Vector2f const &aWorld, sf::Vector2f const &bWorld, sf::RenderWindow const &window)
+{
+
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+    auto const &a = window.mapCoordsToPixel(aWorld);
+    auto const &b = window.mapCoordsToPixel(bWorld);
+    auto cptl = closest_point_to_line(a, b, mousePosition);
+    auto delta = mousePosition - cptl;
+    return dot(delta,delta);
+}
