@@ -90,26 +90,6 @@ void draw_polyline(sf::RenderWindow& window, const std::vector<sf::Vector2f>& po
   window.draw(polyline_shape);
 }
 
-inline
-/**
- * Draws the X and Y axes on the given SFML window.
- *
- * @param window The SFML window to draw on.
- * @param center The center point of the axes.
- * @param length The length of the axes.
- */
-void draw_xy_axis(sf::RenderWindow& window, sf::Vector2f center, double length)
-{
-  auto x_axis = std::vector<sf::Vector2f>{};
-  x_axis.push_back(sf::Vector2f(center.x - length / 2, center.y));
-  x_axis.push_back(sf::Vector2f(center.x + length / 2, center.y));
-  draw_polyline(window, x_axis);
-
-  auto y_axis = std::vector<sf::Vector2f>{};
-  y_axis.push_back(sf::Vector2f(center.x, center.y - length / 2));
-  y_axis.push_back(sf::Vector2f(center.x, center.y + length / 2));
-  draw_polyline(window, y_axis);
-}
 
 
 /**
