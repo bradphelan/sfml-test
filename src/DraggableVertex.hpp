@@ -4,11 +4,11 @@
 #include "Clipper.hpp"
 #include <mutex>
 
-// A draggable vertex object that listens
-// for mouse press events and sets a dragging
-// flag. When the flag is dragging is true, the
-// vertex will follow the mouse position until
-// the mouse is released.
+/// A draggable vertex object that listens
+/// for mouse press events and sets a dragging
+/// flag. When the flag is dragging is true, the
+/// vertex will follow the mouse position until
+/// the mouse is released.
 struct draggable_vertex : sf::CircleShape
 {
     bool moving = false;
