@@ -47,9 +47,8 @@ struct draggable_polyline : sf::Drawable
         }
     }
 
-    /// Check for right click events and if the mouse is hovering over 
-    /// a segment then split that segment and insert a vertex
-    void split(sf::RenderWindow& window)
+    /// Split the line that is currently being hovered over at the closest mouse position
+    void split_if_hovering(sf::RenderWindow& window)
     {
         if(hoverLine)
         {

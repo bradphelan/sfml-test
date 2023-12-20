@@ -67,12 +67,12 @@ int main()
         box.move(window, isDragging);
         window.draw(box);
         if(mouseClickRight)
-            box.split(window);
+            box.split_if_hovering(window);
 
         star.move(window, isDragging);
         window.draw(star);
         if(mouseClickRight)
-            star.split(window);
+            star.split_if_hovering(window);
 
         auto clipped = clip(box.to_polyline(), star.to_polyline(), Clipper2Lib::ClipType::Intersection);
         for (auto const &path : clipped)
