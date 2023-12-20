@@ -6,4 +6,4 @@ Clipper2 library is used for polyline clipping.
 - Nodes are draggable with left click and drag.
 - Polyline edges can be split with right click.
 
-
+![gif of demo](https://i.imgur.com/yJ32S3O.gif)
