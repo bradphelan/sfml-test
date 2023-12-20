@@ -1,4 +1,4 @@
-### Demo project form SMFL
+### Demo project using SMFL
 
 The project presents a basic polyline editor and polyline boolean demo.
 Clipper2 library is used for polyline clipping.
