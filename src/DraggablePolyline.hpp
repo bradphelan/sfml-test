@@ -47,6 +47,22 @@ struct draggable_polyline : sf::Drawable
         }
     }
 
+    /// Check for right click events and if the mouse is hovering over 
+    /// a segment then split that segment and insert a vertex
+    void split(sf::RenderWindow& window)
+    {
+        if(hoverLine)
+        {
+            int i = *hoverLine;
+            int j = (i+1) % vertices.size();
+            auto const& a = vertices[i].getPosition();
+            auto const& b = vertices[j].getPosition();
+            auto const& mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            auto const& newVertexPosition = closest_point_to_line(a, b, mousePosition);
+            vertices.insert(vertices.begin() + j, draggable_vertex(10, newVertexPosition));
+        }
+    }
+
 
     void move(sf::RenderWindow& window, bool & isDragging)
     {

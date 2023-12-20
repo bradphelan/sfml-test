@@ -35,11 +35,21 @@ int main()
 
     while (window.isOpen())
     {
+        bool mouseClickRight = false;
         for (auto event = sf::Event{}; window.pollEvent(event);)
         {
             if (event.type == sf::Event::Closed)
             {
                 window.close();
+            }
+
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                // check if right mouse button is pressed
+                if (event.mouseButton.button == sf::Mouse::Right)
+                {
+                    mouseClickRight = true;
+                }
             }
 
             zoomViewOnScroll(event, window, zoomAmount);
@@ -56,9 +66,13 @@ int main()
 
         box.move(window, isDragging);
         window.draw(box);
+        if(mouseClickRight)
+            box.split(window);
 
         star.move(window, isDragging);
         window.draw(star);
+        if(mouseClickRight)
+            star.split(window);
 
         auto clipped = clip(box.to_polyline(), star.to_polyline(), Clipper2Lib::ClipType::Intersection);
         for (auto const &path : clipped)
