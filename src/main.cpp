@@ -29,6 +29,8 @@ int main()
     // Create a star draggable_polyline
     auto star = draggable_polyline(make_star(sf::Vector2f(300,0), 100, 200, 50, star_points));
 
+    bool isDragging = false;
+
     while (window.isOpen())
     {
         for (auto event = sf::Event{}; window.pollEvent(event);)
@@ -50,36 +52,17 @@ int main()
             window.setView(view);
         });
 
-
         window.clear();
-        auto result = clip(box.to_polyline(), star.to_polyline(), Clipper2Lib::ClipType::Intersection);
 
-        try
-        {
-            for (auto const &path : result)
-            {
-                draw_polyline(window, path, sf::Color::Red);
+        box.move(window, isDragging);
+        window.draw(box);
 
-                auto poly = sw::Polygon{};
+        star.move(window, isDragging);
+        window.draw(star);
 
-                poly.setTriangulationMethod(sw::Polygon::TriangulationMethod::EarClip);
-
-                poly.setScale(1, 1);
-                poly.importVertexPositions(path);
-                poly.setColor(sf::Color::Red);
-                poly.update();
-                window.draw(poly);
-            }
-        }
-        catch (...)
-        {
-        }
-
-        box.move(window);
-        box.draw(window, sf::RenderStates::Default);
-
-        star.move(window);
-        star.draw(window, sf::RenderStates::Default);
+        auto clipped = clip(box.to_polyline(), star.to_polyline(), Clipper2Lib::ClipType::Intersection);
+        for (auto const &path : clipped)
+            draw_polyline(window, path, sf::Color::Red);
 
         window.display();
     }

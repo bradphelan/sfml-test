@@ -32,11 +32,11 @@ struct draggable_polyline : sf::Drawable
         target.draw(polyline_shape, states);
     }
 
-    void move(sf::RenderWindow& window)
+    void move(sf::RenderWindow& window, bool & isDragging)
     {
         for(auto& vertex : vertices)
         {
-            vertex.move(window);
+            vertex.move(window, isDragging );
         }
     }
 

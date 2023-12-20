@@ -14,6 +14,7 @@ struct draggable_vertex : sf::CircleShape
     bool moving = false;
     sf::Vector2f offset;
 
+    inline
     draggable_vertex(float radius, sf::Vector2f const& position)
         : sf::CircleShape(radius)
     {
@@ -25,7 +26,8 @@ struct draggable_vertex : sf::CircleShape
     }
 
 
-    void move(sf::RenderWindow& window)
+    inline
+    void move(sf::RenderWindow& window, bool & isDragging)
     {
         sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
@@ -54,13 +56,15 @@ struct draggable_vertex : sf::CircleShape
             if(!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
             {
                 this->moving = false;
+                isDragging = false;
             }
         }
         else
         {
-            if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && mouseOver )
+            if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && mouseOver && !isDragging )
             {
                 this->moving = true;
+                isDragging = true;
             }
         }
     }
