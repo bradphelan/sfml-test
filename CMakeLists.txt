@@ -7,7 +7,8 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.x)
+    GIT_TAG 2.6.1
+    OVERRIDE_FIND_PACKAGE)
 FetchContent_MakeAvailable(SFML)
 
 # include clipper2
@@ -17,8 +18,14 @@ FetchContent_Declare(clipper2
     SOURCE_SUBDIR CPP)
 FetchContent_MakeAvailable(clipper2)
 
+# include selbaward because it contains a triangulation polygon class
+FetchContent_Declare(selbaward
+    GIT_REPOSITORY https://github.com/Hapaxia/SelbaWard
+    GIT_TAG master)
+FetchContent_MakeAvailable(SelbaWard)
+
 add_executable(CMakeSFMLProject src/main.cpp)
-target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics Clipper2)
+target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics Clipper2 SelbaWard)
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_20)
 
 if(WIN32)

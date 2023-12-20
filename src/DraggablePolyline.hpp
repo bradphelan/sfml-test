@@ -40,5 +40,17 @@ struct draggable_polyline : sf::Drawable
         }
     }
 
+    // return the polyline as a vector of sf::Vector2f
+    polyline to_polyline() const
+    {
+        auto result = polyline{};
+        result.reserve(vertices.size());
+        for(auto const& vertex : vertices)
+        {
+            result.push_back(vertex.getPosition());
+        }
+        return result;
+    }
+
 
 };

@@ -5,6 +5,10 @@
 #include "Utils.hpp"
 #include "Zoom.hpp"
 #include <mutex>
+#include <SelbaWard.hpp>
+
+// Triangulate the polyline using ear clipping
+
 
 int main()
 {
@@ -23,7 +27,7 @@ int main()
     auto box = draggable_polyline(make_box(200, sf::Vector2f(0,0)));
 
     // Create a star draggable_polyline
-    auto star = draggable_polyline(make_star(sf::Vector2f(0,0), 100, 200, 50, star_points));
+    auto star = draggable_polyline(make_star(sf::Vector2f(300,0), 100, 200, 50, star_points));
 
     while (window.isOpen())
     {
@@ -46,7 +50,30 @@ int main()
             window.setView(view);
         });
 
+
         window.clear();
+        auto result = clip(box.to_polyline(), star.to_polyline(), Clipper2Lib::ClipType::Intersection);
+
+        try
+        {
+            for (auto const &path : result)
+            {
+                draw_polyline(window, path, sf::Color::Red);
+
+                auto poly = sw::Polygon{};
+
+                poly.setTriangulationMethod(sw::Polygon::TriangulationMethod::EarClip);
+
+                poly.setScale(1, 1);
+                poly.importVertexPositions(path);
+                poly.setColor(sf::Color::Red);
+                poly.update();
+                window.draw(poly);
+            }
+        }
+        catch (...)
+        {
+        }
 
         box.move(window);
         box.draw(window, sf::RenderStates::Default);

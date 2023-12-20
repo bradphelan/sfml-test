@@ -64,12 +64,13 @@ inline
  * @param window The SFML window to draw on.
  * @param polyline The vector of 2D points representing the polyline.
  */
-void draw_polyline(sf::RenderWindow& window, const std::vector<sf::Vector2f>& polyline)
+void draw_polyline(sf::RenderWindow& window, const std::vector<sf::Vector2f>& polyline, sf::Color color = sf::Color::White)
 {
   auto polyline_shape = sf::VertexArray(sf::LineStrip, polyline.size());
+
   for (int i = 0; i < polyline.size(); i++)
   {
-    polyline_shape[i] = sf::Vertex(polyline[i]);
+    polyline_shape[i] = sf::Vertex(polyline[i], color);
   }
   window.draw(polyline_shape);
 }
