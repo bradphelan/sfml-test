@@ -139,6 +139,16 @@ T distance2_to_line(sf::Vector2<T> const & a, sf::Vector2<T> const & b, sf::Vect
     return dot(delta, delta);
 }
 
+/**
+ * Calculates the squared distance between the mouse position and a line segment defined by two points in pixels. The
+ * input points are in world coordinates, but the mouse position is in pixel coordinates. This function converts the
+ * world coordinates to pixel coordinates before calculating the distance.
+ *
+ * @param aWorld The first point of the line segment in world coordinates.
+ * @param bWorld The second point of the line segment in world coordinates.
+ * @param window The SFML RenderWindow object representing the window.
+ * @return The squared distance between the mouse position and the line segment.
+ */
 int distance2_mouse_to_line_in_pixels(sf::Vector2f const &aWorld, sf::Vector2f const &bWorld, sf::RenderWindow const &window)
 {
 

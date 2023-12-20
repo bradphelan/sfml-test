@@ -43,7 +43,7 @@ struct draggable_polyline : sf::Drawable
             auto const& a = vertices[i].getPosition();
             auto const& b = vertices[j].getPosition();
 
-            draw_line(target, a, b, sf::Color::Red);
+            draw_line(target, a, b, sf::Color::Green);
         }
     }
 
@@ -51,26 +51,29 @@ struct draggable_polyline : sf::Drawable
     void move(sf::RenderWindow& window, bool & isDragging)
     {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+        static int constexpr threshold = 4;
 
         // Check to see if any of the lines are hovered over
         hoverLine = std::nullopt;
         if(!isDragging)
             for (int i = 0; i < vertices.size(); i++)
             {
-                int j = (i+1) % vertices.size();
-                auto dist2 = distance2_mouse_to_line_in_pixels(vertices[i].getPosition(), vertices[j].getPosition(), window);
-                if(dist2 < 16){
+                int j = (i + 1) % vertices.size();
+                auto dist2 = distance2_mouse_to_line_in_pixels(
+                    vertices[i].getPosition(),
+                    vertices[j].getPosition(),
+                    window);
+                if (dist2 < threshold*threshold)
+                {
                     hoverLine = i;
                 }
             }
 
-        for(auto& vertex : vertices)
-        {
+        for (auto &vertex : vertices)
             vertex.move(window, isDragging );
-        }
     }
 
-    // return the polyline as a vector of sf::Vector2f
+    /// return the polyline as a vector of sf::Vector2f
     polyline to_polyline() const
     {
         auto result = polyline{};
