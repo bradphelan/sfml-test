@@ -3,9 +3,8 @@
 #include "Clipper.hpp"
 #include "DraggablePolyline.hpp"
 #include "Utils.hpp"
+#include "Zoom.hpp"
 #include <mutex>
-
-
 
 int main()
 {
