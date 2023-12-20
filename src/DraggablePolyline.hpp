@@ -2,6 +2,7 @@
 #pragma once
 
 #include "DraggableVertex.hpp"
+#include "Utils.hpp"
 
 // A polyline made up of draggable_vertexes
 struct draggable_polyline : sf::Drawable
@@ -23,13 +24,8 @@ struct draggable_polyline : sf::Drawable
         {
             target.draw(vertex, states);
         }   
-
-        auto polyline_shape = sf::VertexArray(sf::LineStrip, vertices.size());
-        for (int i = 0; i < vertices.size(); i++)
-        {
-            polyline_shape[i] = sf::Vertex(vertices[i].getPosition());
-        }
-        target.draw(polyline_shape, states);
+        auto strip = to_closed_line_strip(to_polyline());
+        target.draw(strip, states);
     }
 
     void move(sf::RenderWindow& window, bool & isDragging)

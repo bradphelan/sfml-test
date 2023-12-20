@@ -17,7 +17,6 @@ std::vector<sf::Vector2f> path_to_vector_array(const Clipper2Lib::PathD& path)
     result.reserve(path.size());
     for (const auto &point : path)
         result.push_back(sf::Vector2f(point.x, point.y));
-    result.push_back(sf::Vector2f(path[0].x, path[0].y));
     return result;
 }
 
