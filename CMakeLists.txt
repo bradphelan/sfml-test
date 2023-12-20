@@ -11,11 +11,13 @@ FetchContent_Declare(SFML
     OVERRIDE_FIND_PACKAGE)
 FetchContent_MakeAvailable(SFML)
 
+set(CLIPPER2_TESTS OFF)
 # include clipper2
 FetchContent_Declare(clipper2
     GIT_REPOSITORY https://github.com/AngusJohnson/Clipper2.git
     GIT_TAG Clipper2_1.3.0
-    SOURCE_SUBDIR CPP)
+    SOURCE_SUBDIR CPP
+    )
 FetchContent_MakeAvailable(clipper2)
 
 # include selbaward because it contains a triangulation polygon class
@@ -24,9 +26,11 @@ FetchContent_Declare(selbaward
     GIT_TAG master)
 FetchContent_MakeAvailable(SelbaWard)
 
+
 add_executable(CMakeSFMLProject src/main.cpp)
 target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics Clipper2 SelbaWard)
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_20)
+
 
 if(WIN32)
     add_custom_command(
@@ -37,3 +41,5 @@ if(WIN32)
 endif()
 
 install(TARGETS CMakeSFMLProject)
+
+add_subdirectory(src/test)

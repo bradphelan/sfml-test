@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+namespace xtargets {
+
 /**
  * Zooms the view at the specified pixel in the given window.
  *
@@ -41,4 +43,6 @@ void zoomViewOnScroll(sf::Event event, sf::RenderWindow& window, float zoom)
         zoomViewAt({ event.mouseWheelScroll.x, event.mouseWheelScroll.y }, window, (1.f / zoom));
     else if (event.mouseWheelScroll.delta < 0)
         zoomViewAt({ event.mouseWheelScroll.x, event.mouseWheelScroll.y }, window, zoom);
+}
+
 }

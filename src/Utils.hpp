@@ -3,6 +3,12 @@
 #include <clipper2/clipper.h>
 #include <ranges>
 
+namespace xtargets {
+
+using polyline = std::vector<sf::Vector2f>;
+
+const double M_PI = 3.14159265358979323846; /* pi */
+
 /**
  * @brief Creates a star-shaped polyline.
  *
@@ -158,4 +164,6 @@ int distance2_mouse_to_line_in_pixels(sf::Vector2f const &aWorld, sf::Vector2f c
     auto cptl = closest_point_to_line(a, b, mousePosition);
     auto delta = mousePosition - cptl;
     return dot(delta,delta);
+}
+
 }

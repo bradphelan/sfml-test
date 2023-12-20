@@ -5,6 +5,8 @@
 #include "Utils.hpp"
 #include <optional>
 
+namespace xtargets {
+
 
 // A polyline made up of draggable_vertexes
 struct draggable_polyline : sf::Drawable
@@ -102,3 +104,5 @@ struct draggable_polyline : sf::Drawable
 
 
 };
+
+}
