@@ -32,10 +32,6 @@ struct draggable_vertex : sf::CircleShape
         sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
         bool mouseOver = this->getGlobalBounds().contains(mousePosition);
-        // bool mouseOver = mousePosition.x > this->getPosition().x &&
-        //        mousePosition.y > this->getPosition().y //
-        //        && mousePosition.y < this->getPosition().y + this->getGlobalBounds().height 
-        //        && mousePosition.x < this->getPosition().x + this->getGlobalBounds().width 
 
         if(mouseOver)
         {
@@ -52,7 +48,7 @@ struct draggable_vertex : sf::CircleShape
 
         if(this->moving)
         {
-            this->setPosition(mousePosition.x - this->getGlobalBounds().width/2,mousePosition.y - this->getGlobalBounds().height/2);
+            this->setPosition(mousePosition.x , mousePosition.y );
             if(!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
             {
                 this->moving = false;
