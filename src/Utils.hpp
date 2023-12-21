@@ -112,6 +112,7 @@ inline void draw_line(sf::RenderTarget& target, sf::Vector2f const& a, sf::Vecto
 
 /// Vector dot product
 template <typename T>
+requires std::is_arithmetic_v<T>
 inline
 T dot(sf::Vector2<T> const & a, sf::Vector2<T> const & b)
 {
@@ -120,6 +121,7 @@ T dot(sf::Vector2<T> const & a, sf::Vector2<T> const & b)
 
 /// Distance of point p to line segment (a,b)
 template<typename T>
+requires std::is_arithmetic_v<T>
 sf::Vector2<T> closest_point_to_line(sf::Vector2<T> const & a, sf::Vector2<T> const & b, sf::Vector2<T> const & p)
 {
     sf::Vector2<T> const  ab = b - a;
@@ -138,6 +140,7 @@ sf::Vector2<T> closest_point_to_line(sf::Vector2<T> const & a, sf::Vector2<T> co
 /// Distance of point p to line segment (a,b)
 /// Returns integer value if the template parameter is an integer type
 template<typename T>
+requires std::is_arithmetic_v<T>
 T distance2_to_line(sf::Vector2<T> const & a, sf::Vector2<T> const & b, sf::Vector2<T> const & p)
 {
     sf::Vector2<T> const closest = closest_point_to_line(a, b, p);
@@ -178,7 +181,9 @@ enum class Orientation { Clockwise, CounterClockwise, Collinear };
  * @param b The second vector.
  * @return The cross product of the two vectors.
  */
-double cross(sf::Vector2f const & a, sf::Vector2f const & b)
+template <typename T>
+requires std::is_arithmetic_v<T>
+double cross(sf::Vector2<T> const & a, sf::Vector2<T> const & b)
 {
     return a.x * b.y - a.y * b.x;
 }
@@ -191,7 +196,9 @@ double cross(sf::Vector2f const & a, sf::Vector2f const & b)
  * @param c The third point.
  * @return The orientation of the points.
  */
-Orientation orientation(sf::Vector2f const & a, sf::Vector2f const & b, sf::Vector2f const & c)
+template <typename T>
+requires std::is_arithmetic_v<T>
+Orientation orientation(sf::Vector2<T> const & a, sf::Vector2<T> const & b, sf::Vector2<T> const & c)
 {
     auto const val = cross(b-a,c-b);
     if (val == 0) return Orientation::Collinear;
