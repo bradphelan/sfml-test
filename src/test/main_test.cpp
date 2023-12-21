@@ -23,3 +23,28 @@ TEST(Booleans, Intersection)
 
     EXPECT_EQ(result.size(), 1);
 }
+
+
+TEST(Orientation, CCW)
+{
+    // A counter clockwise seq
+    std::vector<sf::Vector2f> points = {
+        {0,0},
+        {1,0},
+        {1,1}
+    };
+
+    EXPECT_EQ(orientation(points[0], points[1], points[2]), Orientation::CounterClockwise);
+}
+
+TEST(Orientation, CW)
+{
+    // A clockwise seq
+    std::vector<sf::Vector2f> points = {
+        {0,0},
+        {0,1},
+        {1,1}
+    };
+
+    EXPECT_EQ(orientation(points[0], points[1], points[2]), Orientation::Clockwise);
+}

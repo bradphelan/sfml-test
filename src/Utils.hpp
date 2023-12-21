@@ -166,4 +166,36 @@ int distance2_mouse_to_line_in_pixels(sf::Vector2f const &aWorld, sf::Vector2f c
     return dot(delta,delta);
 }
 
+enum class Orientation { Clockwise, CounterClockwise, Collinear };
+
+/**
+ * Calculates the cross product of two 2D vectors. 
+ * Not really a cross product because that doesn't work
+ * with 2D vectors, but it's the same idea and useful for
+ * things like checking the orientation of three points.
+ *
+ * @param a The first vector.
+ * @param b The second vector.
+ * @return The cross product of the two vectors.
+ */
+double cross(sf::Vector2f const & a, sf::Vector2f const & b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+
+/**
+ * Calculates the orientation of three points in a 2D space.
+ *
+ * @param a The first point.
+ * @param b The second point.
+ * @param c The third point.
+ * @return The orientation of the points.
+ */
+Orientation orientation(sf::Vector2f const & a, sf::Vector2f const & b, sf::Vector2f const & c)
+{
+    auto const val = cross(b-a,c-b);
+    if (val == 0) return Orientation::Collinear;
+    return (val < 0) ? Orientation::Clockwise : Orientation::CounterClockwise;
+}
+
 }
